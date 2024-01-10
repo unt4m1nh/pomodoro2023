@@ -1,0 +1,16 @@
+.btn-custom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid var(--hazel);
+    color: var(--hazel);
+    border-radius: 50px;
+}
+
+.large {
+    width: 150px;
+    height: 50px;
+    font-size: 20px;
+    font-weight: 600;
+}

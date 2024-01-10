@@ -1,0 +1,95 @@
+.header {
+    text-align: center;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.content-mode-selection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10rem;
+}
+
+.content-clock-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: fit-content;
+    gap: 1rem;
+}
+
+.content .input-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+}
+
+.content input {
+    width: 600px;
+    height: 3rem;
+    border: none;
+    outline: none;
+    border-bottom: .2em solid var(--hazel);
+    background: var(--hazel-light);
+    border-radius: .2em .2em 0 0;
+    padding: 10px;
+    color: var(--hazel);
+    font-size: 1.5rem;
+}
+
+::placeholder {
+    color: var(--hazel);
+}
+
+.modeActive {
+    display: flex;
+    background-color: var(--hazel);
+    color: white;
+    width: 120px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mode {
+    display: flex;
+    width: 120px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    color: var(--hazel);
+    border: 2px solid var(--hazel);
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.time {
+    font-size: 5em;
+}
+
+.btn-fullscreen {
+    position: fixed;
+    bottom: 0;
+    left: 90%;
+}
+
+.icon {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    color: var(--hazel)
+} 
+
+.btn-add {
+    cursor: pointer;
+    color: var(--hazel)
+}
