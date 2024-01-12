@@ -3,6 +3,8 @@ import "./Home.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Button from "../../components/Button/Button";
 
 function Home() {
@@ -11,7 +13,7 @@ function Home() {
     const [seconds, setSeconds] = useState('00');
     const [isRunning, setIsRunning] = useState(false);
     const [mode, setMode] = useState('Pomodoro');
-    const [task, setTask] = useState([]);
+    const [tasks, setTasks] = useState([]);
     const [taskValue, setTaskValue] = useState('');
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [rotation, setRotation] = useState(0);
@@ -53,9 +55,6 @@ function Home() {
 
         return () => clearInterval(timerId)
     }, [isRunning]);
-
-    console.log(time);
-
 
 
     const handleStartClock = () => {
@@ -120,14 +119,58 @@ function Home() {
 
     const addTask = (taskName) => {
         if (taskName !== '') {
-            setTask(prevState => [...prevState, taskName])
+            const newTask = {
+                id: "Task" + tasks.length,
+                name: taskName
+            }
+            setTasks(prevState => [...prevState, newTask])
             setTaskValue('');
         }
     }
 
+    const deleteTask = (index) => {
+        const deletedTask = [...tasks];
+        if (index === tasks.length - 1) {
+            deletedTask.pop();
+        } else {
+            for (let i = index; i < deletedTask.length-1; i++) {
+                deletedTask[i] = deletedTask[i+1];
+            }
+            deletedTask.pop();
+        }
+        return setTasks(deletedTask)
+    } 
+
     const clearTask = () => {
-        setTask([]);
+        setTasks([]);
     }
+
+    const handleDragAndDrop = (results) => {
+        const { source, destination, type } = results;
+
+        if (!destination) return;
+
+        if (source.droppableId === destination.draggableId &&
+            source.index === destination.index)
+            return;
+
+        if (type === 'group') {
+            const reorederTasks = [...tasks];
+
+            const sourceIndex = source.index;
+            const destinationIndex = destination.index;
+
+            //remove one task from start draggable position
+            const [removedTask] = reorederTasks.splice(sourceIndex, 1);
+            reorederTasks.splice(destinationIndex, 0, removedTask)
+
+            return setTasks(reorederTasks);
+        }
+
+
+    }
+
+    //console.log(tasks)
 
 
     return (
@@ -141,7 +184,7 @@ function Home() {
                     <div className={mode === 'Short Break' ? "modeActive" : "mode"} onClick={() => { handleChangeMode('Short Break') }}>Short Break</div>
                     <div className={mode === 'Long Break' ? "modeActive" : "mode"} onClick={() => { handleChangeMode('Long Break') }}>Long Break</div>
                 </div>
-                <h1>{task.length !== 0 ? task[0] : 'You are not on any tasks !'}</h1>
+                <h1>{tasks.length !== 0 ? tasks[0].name : 'You are not on any tasks !'}</h1>
                 <h1 className="time">{`${minutes} : ${seconds}`}</h1>
                 <div className="content-clock-buttons">
                     {
@@ -158,15 +201,40 @@ function Home() {
                 <h2>Task list</h2>
                 <div className="input-row">
                     <input type="text" placeholder="Add task here" value={taskValue} onChange={(e) => setTaskValue(e.target.value)}></input>
-                    <FontAwesomeIcon className="btn-add" icon={faPlusCircle} size="3x" onClick={() => {addTask(taskValue)}} ></FontAwesomeIcon>
+                    <FontAwesomeIcon className="btn-add" icon={faPlusCircle} size="3x" onClick={() => { addTask(taskValue) }} ></FontAwesomeIcon>
                 </div>
-                <ul>
-                    {
-                        task.map((index) => (
-                            <li key={index}>{index}</li>
-                        ))
-                    }
-                </ul>
+                <DragDropContext onDragEnd={handleDragAndDrop}>
+                    <div className="task-list">
+                        <Droppable droppableId="ROOT" type="group">
+                            {(provided) => (
+                                <div className="task-list" {...provided.droppableProps} ref={provided.innerRef}>
+                                    {
+                                        tasks.map((task, index) => (
+                                            <Draggable draggableId={task.id} key={task.id} index={index}>
+                                                {(provided) => (
+                                                    <div className="task-item"
+                                                        {...provided.dragHandleProps}
+                                                        {...provided.draggableProps}
+                                                        ref={provided.innerRef}>
+                                                        <h3 className="task-title">{task.name}</h3>
+                                                        <FontAwesomeIcon
+                                                            onClick={() => {
+                                                                deleteTask(index)
+                                                            }}
+                                                            icon={faTrashCan}
+                                                            className="icon-delete"
+                                                        ></FontAwesomeIcon>
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        ))
+                                    }
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    </div>
+                </DragDropContext>
                 <Button size="large" onClick={clearTask} color="var(--hazel-light)">Clear task list</Button>
             </div>
             <button onClick={toggleFullScreen} className="btn-fullscreen">Full Screen</button>

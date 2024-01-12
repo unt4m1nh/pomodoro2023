@@ -3,9 +3,8 @@ import "./Button.css"
 
 const Button = ({size, onClick, color, children}) => {
 
-    const [className, setClassName] = useState("btn-custom " + size)
-    console.log(className);
-
+    const [className, setClassName] = useState("btn-custom " + size);
+    
     return (
         <div className={className} onClick={onClick} style={{backgroundColor: `${color}`}}>
             {children}
