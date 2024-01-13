@@ -79,8 +79,9 @@
 
 .btn-fullscreen {
     position: fixed;
-    bottom: 0;
+    top: 700px;
     left: 90%;
+    cursor: pointer;
 }
 
 .icon {
@@ -124,3 +125,20 @@
 .task-item .icon-delete {
     margin-left: 0px;
 }
+
+.background-circle {
+    fill: none;
+    stroke: var(--hazel-light);
+}
+
+.progress-circle {
+    fill: none;
+    stroke: var(--hazel);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.footer {
+    margin-top: 50px;
+}
+

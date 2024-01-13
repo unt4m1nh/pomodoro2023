@@ -1,14 +1,26 @@
 import { useEffect, useState } from "react";
 import "./Home.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
+//Global import Font Awesoem Icons 5
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { faExpand } from "@fortawesome/free-solid-svg-icons";
+
+
 import Button from "../../components/Button/Button";
+
+//Global variables
+const circleWidth = 600;
+const strokeWidth = 50;
+const radius = (circleWidth - strokeWidth) / 2;
+const circumference = radius * 2 * Math.PI;
 
 function Home() {
     const [time, setTime] = useState(1200);
+    const [fixedTime, setFixedTime] = useState(1200);
     const [minutes, setMinutes] = useState(parseInt(time / 60));
     const [seconds, setSeconds] = useState('00');
     const [isRunning, setIsRunning] = useState(false);
@@ -17,7 +29,10 @@ function Home() {
     const [taskValue, setTaskValue] = useState('');
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [rotation, setRotation] = useState(0);
+    const [perTimeLeft, setPerTimeLeft] = useState(100);
 
+    const dashOffset = circumference - (circumference * perTimeLeft ) / 100;
+    console.log(perTimeLeft)
 
     useEffect(() => {
         let timerId
@@ -25,9 +40,12 @@ function Home() {
             let titleClock = time;
             let titleMinutes = parseInt(time / 60);
             let titleSeconds = time % 60;
+            let percent = 100;
             timerId = setInterval(
                 () => {
+                    percent = parseInt(titleClock / fixedTime * 100);
                     setTime(prevState => prevState - 1);
+                    setPerTimeLeft(percent)
                     if (parseInt(titleClock / 60) < 10) {
                         titleMinutes = '0' + parseInt(titleClock / 60);
                         setMinutes(titleMinutes);
@@ -42,7 +60,9 @@ function Home() {
                         titleSeconds = titleClock % 60;
                         setSeconds(titleSeconds);
                     }
-                    if (titleMinutes === 0 && titleSeconds === 0) {
+                    console.log(titleMinutes, titleSeconds);
+                    if (titleMinutes === '00' && titleSeconds === '00') {
+                        console.log('Time out');
                         clearInterval(timerId);
                     }
                     document.title = mode + ' ' + titleMinutes + ':' + titleSeconds;
@@ -70,16 +90,22 @@ function Home() {
         setRotation(rotation + 360);
         if (currentMode === 'Pomodoro') {
             setTime(1200);
+            setFixedTime(1200);
             setMinutes(20);
             setSeconds('00');
+            setPerTimeLeft(100);
         } else if (currentMode === 'Short Break') {
             setTime(10);
+            setFixedTime(10);
             setMinutes('00');
             setSeconds('10');
+            setPerTimeLeft(100);
         } else {
             setTime(600);
+            setFixedTime(600);
             setMinutes(10);
             setSeconds('00');
+            setPerTimeLeft(100);
         }
     }
 
@@ -89,22 +115,28 @@ function Home() {
             document.title = modeSelected
             handleStopClock();
             setTime(1200);
+            setFixedTime(1200);
             setMinutes(20);
             setSeconds('00');
+            setPerTimeLeft(100);
         } else if (modeSelected === 'Short Break') {
             setMode('Short Break');
             document.title = modeSelected
             handleStopClock();
             setTime(10);
+            setFixedTime(10);
             setMinutes('00');
             setSeconds('10');
+            setPerTimeLeft(100);
         } else {
             setMode('Long Break');
             document.title = modeSelected
             handleStopClock();
             setTime(600);
+            setFixedTime(600);
             setMinutes(10);
             setSeconds('00');
+            setPerTimeLeft(100);
         }
     }
 
@@ -133,13 +165,13 @@ function Home() {
         if (index === tasks.length - 1) {
             deletedTask.pop();
         } else {
-            for (let i = index; i < deletedTask.length-1; i++) {
-                deletedTask[i] = deletedTask[i+1];
+            for (let i = index; i < deletedTask.length - 1; i++) {
+                deletedTask[i] = deletedTask[i + 1];
             }
             deletedTask.pop();
         }
         return setTasks(deletedTask)
-    } 
+    }
 
     const clearTask = () => {
         setTasks([]);
@@ -170,9 +202,6 @@ function Home() {
 
     }
 
-    //console.log(tasks)
-
-
     return (
         <div>
             <div className="header">
@@ -198,6 +227,26 @@ function Home() {
                         style={{ transform: `rotate(${rotation}deg)` }}
                     />
                 </div>
+                <svg
+                    width={circleWidth}
+                    height={circleWidth}
+                    viewBox={`0 0 ${circleWidth} ${circleWidth}`}
+                >
+                    <circle cx={circleWidth / 2} cy={circleWidth / 2} strokeWidth={strokeWidth}
+                        r={radius}
+                        className="background-circle"
+                    ></circle>
+                    <circle cx={circleWidth / 2} cy={circleWidth / 2} strokeWidth={strokeWidth}
+                        r={radius}
+                        className="progress-circle"
+                        style={{
+                            strokeDasharray: circumference,
+                            strokeDashoffset: dashOffset
+                        }}
+                        transform={`rotate(-90 ${circleWidth / 2} ${circleWidth / 2})`}
+                    ></circle>
+                    <text className="time" x="32%" y="50%">{`${minutes} : ${seconds}`}</text>
+                </svg>
                 <h2>Task list</h2>
                 <div className="input-row">
                     <input type="text" placeholder="Add task here" value={taskValue} onChange={(e) => setTaskValue(e.target.value)}></input>
@@ -237,7 +286,10 @@ function Home() {
                 </DragDropContext>
                 <Button size="large" onClick={clearTask} color="var(--hazel-light)">Clear task list</Button>
             </div>
-            <button onClick={toggleFullScreen} className="btn-fullscreen">Full Screen</button>
+            <FontAwesomeIcon onClick={toggleFullScreen} className="btn-fullscreen" icon={faExpand} size="3x" />
+            <div className="footer">
+
+            </div>
         </div>
     );
 }
