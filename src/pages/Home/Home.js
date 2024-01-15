@@ -8,13 +8,14 @@ import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { faExpand } from "@fortawesome/free-solid-svg-icons";
+import { faGear } from "@fortawesome/free-solid-svg-icons";
 
 
 import Button from "../../components/Button/Button";
 
 //Global variables
-const circleWidth = 600;
-const strokeWidth = 50;
+const circleWidth = 400;
+const strokeWidth = 10;
 const radius = (circleWidth - strokeWidth) / 2;
 const circumference = radius * 2 * Math.PI;
 
@@ -63,6 +64,7 @@ function Home() {
                     console.log(titleMinutes, titleSeconds);
                     if (titleMinutes === '00' && titleSeconds === '00') {
                         console.log('Time out');
+                        setIsRunning(false);
                         clearInterval(timerId);
                     }
                     document.title = mode + ' ' + titleMinutes + ':' + titleSeconds;
@@ -204,8 +206,12 @@ function Home() {
 
     return (
         <div>
-            <div className="header">
-                <h1>Pomodoro Clock</h1>
+            <div className={!isFullScreen ? "header" : "hide"}>
+                <h1>Focusly</h1>
+                <div className="btn-setting">
+                    <p>Settings</p>
+                    <FontAwesomeIcon icon={faGear} size="xl" />
+                </div>
             </div>
             <div className="content">
                 <div className="content-mode-selection">
@@ -214,23 +220,11 @@ function Home() {
                     <div className={mode === 'Long Break' ? "modeActive" : "mode"} onClick={() => { handleChangeMode('Long Break') }}>Long Break</div>
                 </div>
                 <h1>{tasks.length !== 0 ? tasks[0].name : 'You are not on any tasks !'}</h1>
-                <h1 className="time">{`${minutes} : ${seconds}`}</h1>
-                <div className="content-clock-buttons">
-                    {
-                        !isRunning ?
-                            <Button size="large" onClick={handleStartClock} color="var(--hazel-light)">Start</Button> :
-                            <Button size="large" onClick={handleStopClock} color="var(--hazel-light)">Pause</Button>
-                    }
-                    <FontAwesomeIcon className="icon" icon={faRotateRight} size="2xl" onClick={() => {
-                        handleResetClock(mode);
-                    }}
-                        style={{ transform: `rotate(${rotation}deg)` }}
-                    />
-                </div>
                 <svg
                     width={circleWidth}
                     height={circleWidth}
                     viewBox={`0 0 ${circleWidth} ${circleWidth}`}
+                    className="progess-container"
                 >
                     <circle cx={circleWidth / 2} cy={circleWidth / 2} strokeWidth={strokeWidth}
                         r={radius}
@@ -245,8 +239,20 @@ function Home() {
                         }}
                         transform={`rotate(-90 ${circleWidth / 2} ${circleWidth / 2})`}
                     ></circle>
-                    <text className="time" x="32%" y="50%">{`${minutes} : ${seconds}`}</text>
+                    <text className="time" x="21%" y="55%">{`${minutes} : ${seconds}`}</text>
                 </svg>
+                <div className="content-clock-buttons">
+                    {
+                        !isRunning ?
+                            <Button size="large" onClick={handleStartClock} color="var(--hazel-light)">Start</Button> :
+                            <Button size="large" onClick={handleStopClock} color="var(--hazel-light)">Pause</Button>
+                    }
+                    <FontAwesomeIcon className="icon" icon={faRotateRight} size="2xl" onClick={() => {
+                        handleResetClock(mode);
+                    }}
+                        style={{ transform: `rotate(${rotation}deg)` }}
+                    />
+                </div>
                 <h2>Task list</h2>
                 <div className="input-row">
                     <input type="text" placeholder="Add task here" value={taskValue} onChange={(e) => setTaskValue(e.target.value)}></input>

@@ -1,5 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,300;1,400;1,500;1,700&family=Poppins:wght@500;700&family=Sofia&display=swap');
+
+.hide {
+    opacity: 0;
+}
+
 .header {
-    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    height: fit-content;
+    padding: 1%;
+}
+
+
+.header h1 {
+    font-size: 3rem;
+    margin-left: 9%;
+    font-family: 'Sofia', cursive;
+    color: var(--neon-blue);
+    flex-grow: 1;
+}
+
+.header .btn-setting {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: fit-content;
+    height: fit-content;
+    padding: 10px;
+    gap: 0.5rem;
+    border: 2px solid var(--neon-blue);
+    border-radius: 10px;
+    margin-right: 0px;
+}
+
+.header .btn-setting:hover {
+    color: var(--neon-blue);
 }
 
 .content {
@@ -21,6 +59,7 @@
     align-items: center;
     width: fit-content;
     gap: 1rem;
+    margin-top: 1.5rem;
 }
 
 .content .input-row {
@@ -73,10 +112,6 @@
     cursor: pointer;
 }
 
-.time {
-    font-size: 5em;
-}
-
 .btn-fullscreen {
     position: fixed;
     top: 700px;
@@ -126,14 +161,24 @@
     margin-left: 0px;
 }
 
+.progess-container {
+    display: flex;
+}
+
+.progess-container .time {
+    font-size: 5em;
+    font-weight: 600;
+    fill: var(--hazel);
+}
+
 .background-circle {
-    fill: none;
-    stroke: var(--hazel-light);
+    fill: var(--hazel-light);
+    stroke: var(--hazel);
 }
 
 .progress-circle {
     fill: none;
-    stroke: var(--hazel);
+    stroke: var(--hazel-light);
     stroke-linecap: round;
     stroke-linejoin: round;
 }

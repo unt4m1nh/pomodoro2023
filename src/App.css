@@ -1,5 +1,10 @@
 :root {
-    --hazel-light: #ffcf9c; 
+    --hazel-light: #ffcf9c;
     --hazel: #b96d40;
+    --blue1: #3d5a80;
+    --neon-blue: #1F51FF;
 }
 
+* {
+    margin: 0;
+}
