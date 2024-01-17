@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,300;1,400;1,500;1,700&family=Poppins:wght@500;700&family=Sofia&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,300;1,400;1,500;1,700&family=Sofia&display=swap');
 
 .hide {
     opacity: 0;
@@ -9,9 +9,9 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     height: fit-content;
     padding: 1%;
+    gap: 0.5rem;
 }
 
 
@@ -19,7 +19,7 @@
     font-size: 3rem;
     margin-left: 9%;
     font-family: 'Sofia', cursive;
-    color: var(--neon-blue);
+    color: #Fff;
     flex-grow: 1;
 }
 
@@ -31,26 +31,58 @@
     height: fit-content;
     padding: 10px;
     gap: 0.5rem;
-    border: 2px solid var(--neon-blue);
+    border: 2px solid #Fff;
     border-radius: 10px;
     margin-right: 0px;
+    color: #Fff
 }
 
 .header .btn-setting:hover {
-    color: var(--neon-blue);
+    background-color: #Fff;
+    color: #000;
+    cursor: pointer;
+}
+
+.header .btn-task {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: fit-content;
+    height: fit-content;
+    padding: 10px;
+    gap: 0.5rem;
+    background-color: #Fff;
+    border-radius: 10px;
+    margin-right: 0px;
+    color: #000
+}
+
+.header .btn-task:hover {
+    cursor: pointer;
+}
+
+.bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
 }
 
 .content {
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    z-index: 1;
 }
 
 .content-mode-selection {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10rem;
+    gap: 10px;
+    margin-top: 50px;
 }
 
 .content-clock-buttons {
@@ -70,46 +102,52 @@
 }
 
 .content input {
-    width: 600px;
+    width: 350px;
     height: 3rem;
-    border: none;
+    border: 2px solid var(--dawn-blue);
     outline: none;
-    border-bottom: .2em solid var(--hazel);
-    background: var(--hazel-light);
-    border-radius: .2em .2em 0 0;
+    border-radius: 10px;
     padding: 10px;
-    color: var(--hazel);
-    font-size: 1.5rem;
+    color: #000;
+    font-size: 1.25rem;
+    font-style: italic;
 }
 
 ::placeholder {
-    color: var(--hazel);
+    color: #000;
+    font-style: italic;
 }
 
 .modeActive {
     display: flex;
-    background-color: var(--hazel);
-    color: white;
-    width: 120px;
-    height: 40px;
+    background-color: #fff;
+    color: var(--neon-blue);
+    width: 150px;
+    height: 50px; 
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
+    border-radius: 50px;
     font-weight: 700;
     cursor: pointer;
 }
 
 .mode {
     display: flex;
-    width: 120px;
-    height: 40px;
+    width: 150px;
+    height: 50px;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
-    color: var(--hazel);
-    border: 2px solid var(--hazel);
+    border-radius: 50px;
+    color: #fff;
+    border: 2px solid #fff;
     font-weight: 500;
     cursor: pointer;
+}
+
+.time {
+    font-weight: 600;
+    font-size: 10rem;
+    font-family: 'Courier Prime', monospace;
 }
 
 .btn-fullscreen {
@@ -122,35 +160,77 @@
 .icon {
     cursor: pointer;
     transition: transform 0.3s ease;
-    color: var(--hazel)
-} 
+    color: #fff;
+}
 
 .btn-add {
     cursor: pointer;
-    color: var(--hazel)
+    color: var(--dawn-blue);
 }
 
-.task-list {
-    margin: 16px 0px 16px 0px;
+.task-container {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    background-color: #Fff;
+    height: 100vh;
+    transition: 850ms;
+}
+
+.task-container-active {
+    position: fixed;
+    background-color: #Fff;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    transition: 350ms ease-in;
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    padding: 0.75rem;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.task-container-active .control-btn {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: fit-content;
+    padding: 0.25rem;
+    background-color: var(--neon-blue);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    gap: 1rem;
+}
+
+.task-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 20px;
+}
+
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .task-item {
-    width: 680px;
+    width: 90%;
     height: 50px;
-    background-color: var(--hazel);
+    background-color: var(--dawn-blue);
     display: flex;
     align-items: center;
     justify-content: flex-start;
     padding-left: 20px;
     padding-right: 20px;
     border-radius: 10px;
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 600;
     color: white;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
 .task-item .task-title {
@@ -159,6 +239,7 @@
 
 .task-item .icon-delete {
     margin-left: 0px;
+    cursor: pointer;
 }
 
 .progess-container {
@@ -168,22 +249,19 @@
 .progess-container .time {
     font-size: 5em;
     font-weight: 600;
-    fill: var(--hazel);
+    font-size: 7rem;
+    fill: #fff;
 }
 
 .background-circle {
-    fill: var(--hazel-light);
-    stroke: var(--hazel);
+    fill: none;
+    stroke: #fff;
 }
 
 .progress-circle {
     fill: none;
-    stroke: var(--hazel-light);
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.footer {
-    margin-top: 50px;
+    stroke: var(--dawn-blue);
+    stroke-linecap: square;
+    stroke-linejoin: square;
 }
 

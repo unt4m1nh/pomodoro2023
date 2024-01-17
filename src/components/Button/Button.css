@@ -3,8 +3,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border: 2px solid var(--hazel);
-    color: var(--hazel);
+    color: #000;
     border-radius: 50px;
 }
 

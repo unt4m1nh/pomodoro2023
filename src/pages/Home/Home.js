@@ -9,6 +9,8 @@ import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { faExpand } from "@fortawesome/free-solid-svg-icons";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
+import { faListCheck } from "@fortawesome/free-solid-svg-icons";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 
 import Button from "../../components/Button/Button";
@@ -26,13 +28,21 @@ function Home() {
     const [seconds, setSeconds] = useState('00');
     const [isRunning, setIsRunning] = useState(false);
     const [mode, setMode] = useState('Pomodoro');
+
     const [tasks, setTasks] = useState([]);
     const [taskValue, setTaskValue] = useState('');
+    const [showTask, setShowTask] = useState(false)
+
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [rotation, setRotation] = useState(0);
     const [perTimeLeft, setPerTimeLeft] = useState(100);
 
-    const dashOffset = circumference - (circumference * perTimeLeft ) / 100;
+    const [viewWidth, setViewWidth] = useState(window.innerWidth);
+    const [viewHeight, setViewHeight] = useState(window.innerHeight);
+
+    const bgLink = 'https://images.alphacoders.com/132/1327498.png'
+
+    const dashOffset = circumference - (circumference * perTimeLeft) / 100;
     console.log(perTimeLeft)
 
     useEffect(() => {
@@ -77,6 +87,21 @@ function Home() {
 
         return () => clearInterval(timerId)
     }, [isRunning]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setViewWidth(window.innerWidth);
+            setViewHeight(window.innerHeight);
+        };
+
+        handleResize();
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
 
     const handleStartClock = () => {
@@ -206,11 +231,19 @@ function Home() {
 
     return (
         <div>
+            <div className="bg-image" style={{
+                backgroundImage: `url(${bgLink})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat',
+                width: viewWidth, height: viewHeight, opacity: 0.8
+            }}></div>
             <div className={!isFullScreen ? "header" : "hide"}>
                 <h1>Focusly</h1>
                 <div className="btn-setting">
                     <p>Settings</p>
                     <FontAwesomeIcon icon={faGear} size="xl" />
+                </div>
+                <div className="btn-task" onClick={() => { setShowTask(true) }}>
+                    <p>Task List</p>
+                    <FontAwesomeIcon icon={faListCheck} size="xl" />
                 </div>
             </div>
             <div className="content">
@@ -219,12 +252,14 @@ function Home() {
                     <div className={mode === 'Short Break' ? "modeActive" : "mode"} onClick={() => { handleChangeMode('Short Break') }}>Short Break</div>
                     <div className={mode === 'Long Break' ? "modeActive" : "mode"} onClick={() => { handleChangeMode('Long Break') }}>Long Break</div>
                 </div>
-                <h1>{tasks.length !== 0 ? tasks[0].name : 'You are not on any tasks !'}</h1>
+                <h1 style={{ margin: 20 }}>{tasks.length !== 0 ? tasks[0].name : 'You are not on any tasks !'}</h1>
+                <h1 className="time">{minutes}:{seconds}</h1>
                 <svg
                     width={circleWidth}
                     height={circleWidth}
                     viewBox={`0 0 ${circleWidth} ${circleWidth}`}
                     className="progess-container"
+                    style={{ display: 'none' }}
                 >
                     <circle cx={circleWidth / 2} cy={circleWidth / 2} strokeWidth={strokeWidth}
                         r={radius}
@@ -239,13 +274,13 @@ function Home() {
                         }}
                         transform={`rotate(-90 ${circleWidth / 2} ${circleWidth / 2})`}
                     ></circle>
-                    <text className="time" x="21%" y="55%">{`${minutes} : ${seconds}`}</text>
+                    <text className="time" x="7%" y="55%">{`${minutes} : ${seconds}`}</text>
                 </svg>
                 <div className="content-clock-buttons">
                     {
                         !isRunning ?
-                            <Button size="large" onClick={handleStartClock} color="var(--hazel-light)">Start</Button> :
-                            <Button size="large" onClick={handleStopClock} color="var(--hazel-light)">Pause</Button>
+                            <Button size="large" onClick={handleStartClock} color="#fff">Start</Button> :
+                            <Button size="large" onClick={handleStopClock} color="#fff">Pause</Button>
                     }
                     <FontAwesomeIcon className="icon" icon={faRotateRight} size="2xl" onClick={() => {
                         handleResetClock(mode);
@@ -253,48 +288,53 @@ function Home() {
                         style={{ transform: `rotate(${rotation}deg)` }}
                     />
                 </div>
-                <h2>Task list</h2>
-                <div className="input-row">
-                    <input type="text" placeholder="Add task here" value={taskValue} onChange={(e) => setTaskValue(e.target.value)}></input>
-                    <FontAwesomeIcon className="btn-add" icon={faPlusCircle} size="3x" onClick={() => { addTask(taskValue) }} ></FontAwesomeIcon>
-                </div>
-                <DragDropContext onDragEnd={handleDragAndDrop}>
-                    <div className="task-list">
-                        <Droppable droppableId="ROOT" type="group">
-                            {(provided) => (
-                                <div className="task-list" {...provided.droppableProps} ref={provided.innerRef}>
-                                    {
-                                        tasks.map((task, index) => (
-                                            <Draggable draggableId={task.id} key={task.id} index={index}>
-                                                {(provided) => (
-                                                    <div className="task-item"
-                                                        {...provided.dragHandleProps}
-                                                        {...provided.draggableProps}
-                                                        ref={provided.innerRef}>
-                                                        <h3 className="task-title">{task.name}</h3>
-                                                        <FontAwesomeIcon
-                                                            onClick={() => {
-                                                                deleteTask(index)
-                                                            }}
-                                                            icon={faTrashCan}
-                                                            className="icon-delete"
-                                                        ></FontAwesomeIcon>
-                                                    </div>
-                                                )}
-                                            </Draggable>
-                                        ))
-                                    }
-                                    {provided.placeholder}
-                                </div>
-                            )}
-                        </Droppable>
+                <div className={showTask ? 'task-container-active' : 'task-container'}>
+                    <div className="task-content">
+                        <div className="input-row">
+                            <input type="text" placeholder="Add task here" value={taskValue} onChange={(e) => setTaskValue(e.target.value)}></input>
+                            <FontAwesomeIcon className="btn-add" icon={faPlusCircle} size="3x" onClick={() => { addTask(taskValue) }} ></FontAwesomeIcon>
+                        </div>
+                        <DragDropContext onDragEnd={handleDragAndDrop}>
+                            <div className="task-list">
+                                <Droppable droppableId="ROOT" type="group">
+                                    {(provided) => (
+                                        <div className="task-list" {...provided.droppableProps} ref={provided.innerRef}>
+                                            {
+                                                tasks.map((task, index) => (
+                                                    <Draggable draggableId={task.id} key={task.id} index={index}>
+                                                        {(provided) => (
+                                                            <div className="task-item"
+                                                                {...provided.dragHandleProps}
+                                                                {...provided.draggableProps}
+                                                                ref={provided.innerRef}>
+                                                                <h3 className="task-title">{task.name}</h3>
+                                                                <FontAwesomeIcon
+                                                                    onClick={() => {
+                                                                        deleteTask(index)
+                                                                    }}
+                                                                    icon={faTrashCan}
+                                                                    className="icon-delete"
+                                                                ></FontAwesomeIcon>
+                                                            </div>
+                                                        )}
+                                                    </Draggable>
+                                                ))
+                                            }
+                                            {provided.placeholder}
+                                        </div>
+                                    )}
+                                </Droppable>
+                            </div>
+                        </DragDropContext>
                     </div>
-                </DragDropContext>
-                <Button size="large" onClick={clearTask} color="var(--hazel-light)">Clear task list</Button>
+                    <div className="control-btn">
+                        <button onClick={clearTask}>Clear Task</button>
+                        <FontAwesomeIcon icon={faXmark} size="2xl" onClick={() => {setShowTask(false)}} className="icon" />
+                    </div>
+                </div>
             </div>
-            <FontAwesomeIcon onClick={toggleFullScreen} className="btn-fullscreen" icon={faExpand} size="3x" />
+            <FontAwesomeIcon onClick={toggleFullScreen} className="btn-fullscreen icon" icon={faExpand} size="3x" />
             <div className="footer">
-
             </div>
         </div>
     );
