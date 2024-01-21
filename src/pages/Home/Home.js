@@ -42,12 +42,13 @@ function Home() {
 
     const [viewWidth, setViewWidth] = useState(window.innerWidth);
     const [viewHeight, setViewHeight] = useState(window.innerHeight);
+
+    const settingBtnRef = useRef(null);
+    const [showSetting, setShowSetting] = useState(true);
     const [settingPos, setSettingPos] = useState({
         posX: 0,
         posY: 0
     })
-
-    const settingBtnRef = useRef(null);
 
     const bgLink = 'https://images.alphacoders.com/132/1327498.png'
     const testTheme = currentSetting.theme;
@@ -116,8 +117,10 @@ function Home() {
 
     useEffect(() => {
         const settingBtnRect = settingBtnRef.current.getBoundingClientRect();
-        console.log('Element position', { top: settingBtnRect.top, left: settingBtnRect.left })
-        setSettingPos({posX: settingBtnRect.top, posY: settingBtnRect.left })
+        console.log('Element position', { top: settingBtnRect.top, left: settingBtnRect.left });
+        const posX = settingBtnRect.top + settingBtnRect.height;
+        const posY = settingBtnRect.left - settingBtnRect.width * 3;
+        setSettingPos({ posX: posX, posY: posY });
     }, [isFullScreen]);
 
 
@@ -351,8 +354,12 @@ function Home() {
                 </div>
             </div>
             <FontAwesomeIcon onClick={toggleFullScreen} className="btn-fullscreen icon" icon={faExpand} size="3x" />
-            <Setting posX={settingPos.posX}
-                posY={settingPos.posY} />
+            {
+                showSetting && (
+                    <Setting posX={settingPos.posX}
+                        posY={settingPos.posY} />
+                )
+            }
             <div className="footer">
             </div>
         </div>

@@ -1,5 +1,50 @@
 .setting-container {
-    width: 300px;
-    height: 200px;
+    width: 500px;
+    height: fit-content;
     background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.setting-container .body {
+    display: flex;
+    flex-direction: row;
+}
+
+.setting-mode {
+    display: flex;
+    flex:  1;
+    flex-direction: column;
+    border-right: 1px solid var(--dawn-blue);
+    gap: 5px;
+}
+
+.setting-mode .item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.setting-mode .item:hover {
+    background-color: var(--dawn-blue);
+}
+
+.setting-mode .item-active {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+    background-color: var(--neon-blue);
+    color: #fff;
+    border-radius: 10px;
+}
+
+.setting-content {
+    flex: 2;
 }
