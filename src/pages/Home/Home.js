@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./Home.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -12,8 +12,9 @@ import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { faListCheck } from "@fortawesome/free-solid-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
-
+import { useAppState } from "../../GeneralSettings";
 import Button from "../../components/Button/Button";
+import Setting from "../../components/Setting/Setting";
 
 //Global variables
 const circleWidth = 400;
@@ -22,7 +23,9 @@ const radius = (circleWidth - strokeWidth) / 2;
 const circumference = radius * 2 * Math.PI;
 
 function Home() {
-    const [time, setTime] = useState(1200);
+    //const [time, setTime] = useState(1200);
+    const { currentSetting, updateSettings } = useAppState();
+    const [time, setTime] = useState(currentSetting.pomodoroTime);
     const [fixedTime, setFixedTime] = useState(1200);
     const [minutes, setMinutes] = useState(parseInt(time / 60));
     const [seconds, setSeconds] = useState('00');
@@ -39,11 +42,19 @@ function Home() {
 
     const [viewWidth, setViewWidth] = useState(window.innerWidth);
     const [viewHeight, setViewHeight] = useState(window.innerHeight);
+    const [settingPos, setSettingPos] = useState({
+        posX: 0,
+        posY: 0
+    })
+
+    const settingBtnRef = useRef(null);
 
     const bgLink = 'https://images.alphacoders.com/132/1327498.png'
+    const testTheme = currentSetting.theme;
 
     const dashOffset = circumference - (circumference * perTimeLeft) / 100;
-    console.log(perTimeLeft)
+    console.log(perTimeLeft);
+    console.log(testTheme);
 
     useEffect(() => {
         let timerId
@@ -102,6 +113,12 @@ function Home() {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+
+    useEffect(() => {
+        const settingBtnRect = settingBtnRef.current.getBoundingClientRect();
+        console.log('Element position', { top: settingBtnRect.top, left: settingBtnRect.left })
+        setSettingPos({posX: settingBtnRect.top, posY: settingBtnRect.left })
+    }, [isFullScreen]);
 
 
     const handleStartClock = () => {
@@ -237,7 +254,7 @@ function Home() {
             }}></div>
             <div className={!isFullScreen ? "header" : "hide"}>
                 <h1>Focusly</h1>
-                <div className="btn-setting">
+                <div className="btn-setting" ref={settingBtnRef}>
                     <p>Settings</p>
                     <FontAwesomeIcon icon={faGear} size="xl" />
                 </div>
@@ -329,11 +346,13 @@ function Home() {
                     </div>
                     <div className="control-btn">
                         <button onClick={clearTask}>Clear Task</button>
-                        <FontAwesomeIcon icon={faXmark} size="2xl" onClick={() => {setShowTask(false)}} className="icon" />
+                        <FontAwesomeIcon icon={faXmark} size="2xl" onClick={() => { setShowTask(false) }} className="icon" />
                     </div>
                 </div>
             </div>
             <FontAwesomeIcon onClick={toggleFullScreen} className="btn-fullscreen icon" icon={faExpand} size="3x" />
+            <Setting posX={settingPos.posX}
+                posY={settingPos.posY} />
             <div className="footer">
             </div>
         </div>

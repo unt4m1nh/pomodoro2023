@@ -1,11 +1,14 @@
 import './App.css';
 import Home from './pages/Home/Home';
+import { GeneralSettings } from './GeneralSettings';
 
 function App() {
   return (
-    <div className="App">
-      <Home />
-    </div>
+    <GeneralSettings>
+      <div className="App">
+        <Home />
+      </div>
+    </GeneralSettings>
   );
 }
 
