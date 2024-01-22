@@ -44,18 +44,15 @@ function Home() {
     const [viewHeight, setViewHeight] = useState(window.innerHeight);
 
     const settingBtnRef = useRef(null);
-    const [showSetting, setShowSetting] = useState(true);
+    const [showSetting, setShowSetting] = useState(false);
     const [settingPos, setSettingPos] = useState({
         posX: 0,
         posY: 0
     })
 
-    const bgLink = 'https://images.alphacoders.com/132/1327498.png'
-    const testTheme = currentSetting.theme;
-
     const dashOffset = circumference - (circumference * perTimeLeft) / 100;
     console.log(perTimeLeft);
-    console.log(testTheme);
+    console.log(currentSetting.theme);
 
     useEffect(() => {
         let timerId
@@ -119,7 +116,7 @@ function Home() {
         const settingBtnRect = settingBtnRef.current.getBoundingClientRect();
         console.log('Element position', { top: settingBtnRect.top, left: settingBtnRect.left });
         const posX = settingBtnRect.top + settingBtnRect.height;
-        const posY = settingBtnRect.left - settingBtnRect.width * 3;
+        const posY = settingBtnRect.left - settingBtnRect.width * 3.5;
         setSettingPos({ posX: posX, posY: posY });
     }, [isFullScreen]);
 
@@ -252,12 +249,12 @@ function Home() {
     return (
         <div>
             <div className="bg-image" style={{
-                backgroundImage: `url(${bgLink})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat',
+                backgroundImage: `url(${currentSetting.theme})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat',
                 width: viewWidth, height: viewHeight, opacity: 0.8
             }}></div>
             <div className={!isFullScreen ? "header" : "hide"}>
                 <h1>Focusly</h1>
-                <div className="btn-setting" ref={settingBtnRef}>
+                <div className="btn-setting" ref={settingBtnRef} onClick={() => { setShowSetting(!showSetting)}}>
                     <p>Settings</p>
                     <FontAwesomeIcon icon={faGear} size="xl" />
                 </div>
