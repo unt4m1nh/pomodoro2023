@@ -4,7 +4,7 @@ const AppContext = createContext();
 
 export function GeneralSettings({ children }) {
     const [currentSetting, setCurrentSetting] = useState({
-        theme: 0,
+        theme: 'https://images.pexels.com/photos/1367192/pexels-photo-1367192.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
         notificationSound: 0,
         volume: 50,
         pomodoroTime: 1200,

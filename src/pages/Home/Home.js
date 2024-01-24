@@ -16,6 +16,8 @@ import { useAppState } from "../../GeneralSettings";
 import Button from "../../components/Button/Button";
 import Setting from "../../components/Setting/Setting";
 
+import alarm1 from "../../assets/sounds/alarm-clock-short-6402.mp3"
+
 //Global variables
 const circleWidth = 400;
 const strokeWidth = 10;
@@ -44,6 +46,8 @@ function Home() {
     const [viewHeight, setViewHeight] = useState(window.innerHeight);
 
     const settingBtnRef = useRef(null);
+    const btnPlayAudioRef = useRef(null);
+
     const [showSetting, setShowSetting] = useState(false);
     const [settingPos, setSettingPos] = useState({
         posX: 0,
@@ -83,6 +87,7 @@ function Home() {
                     console.log(titleMinutes, titleSeconds);
                     if (titleMinutes === '00' && titleSeconds === '00') {
                         console.log('Time out');
+                        playAlarm();
                         setIsRunning(false);
                         clearInterval(timerId);
                     }
@@ -246,6 +251,14 @@ function Home() {
 
     }
 
+    const playAlarm = () => {
+        new Audio(alarm1).play()
+    }
+
+    const playButtonClicked = () => {
+        btnPlayAudioRef.current.play();
+    }
+
     return (
         <div>
             <div className="bg-image" style={{
@@ -296,8 +309,8 @@ function Home() {
                 <div className="content-clock-buttons">
                     {
                         !isRunning ?
-                            <Button size="large" onClick={handleStartClock} color="#fff">Start</Button> :
-                            <Button size="large" onClick={handleStopClock} color="#fff">Pause</Button>
+                            <Button size="large" onClick={() => {handleStartClock(); playButtonClicked();}} color="#fff">Start</Button> :
+                            <Button size="large" onClick={() => {handleStartClock(); playButtonClicked();}} color="#fff">Pause</Button>
                     }
                     <FontAwesomeIcon className="icon" icon={faRotateRight} size="2xl" onClick={() => {
                         handleResetClock(mode);
@@ -305,6 +318,7 @@ function Home() {
                         style={{ transform: `rotate(${rotation}deg)` }}
                     />
                 </div>
+                <audio ref={btnPlayAudioRef} src={require('../../assets/sounds/mouse-click-153941.mp3')}></audio>
                 <div className={showTask ? 'task-container-active' : 'task-container'}>
                     <div className="task-content">
                         <div className="input-row">

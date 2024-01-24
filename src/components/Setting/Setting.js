@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import "./Setting.css"
 
 //Global import Font Awesoem Icons 5
@@ -17,6 +17,11 @@ const Setting = ({ posX, posY }) => {
     const { currentSetting, updateSettings } = useAppState();
     const [settingMode, setSettingMode] = useState('Theme');
     const [theme, setTheme] = useState(0);
+    const [alarm, setAlarm] = useState(0);
+    const [checked, setChecked] = useState(false);
+
+    const alarmSoundRef = useRef(null);
+
     const themes = [
         {
             id: 0,
@@ -35,6 +40,35 @@ const Setting = ({ posX, posY }) => {
             link: 'https://images.pexels.com/photos/2070047/pexels-photo-2070047.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
         }
     ]
+    const alarms = [
+        {
+            id: 0,
+            name: 'Alarm 1',
+            path: 'alarm-clock-short-6402.mp3'
+        }, {
+            id: 1,
+            name: 'Alarm 2',
+            path: 'clock-alarm-8761.mp3'
+        }, {
+            id: 2,
+            name: 'Alarm 3',
+            path: 'simple-notification-152054.mp3'
+        }, {
+            id: 3,
+            name: 'Alarm 4',
+            path: 'smartphone_vibrating_alarm_silent-7040.mp3'
+        }
+    ]
+
+    const playSelectedAlarm = () => {
+        console.log(alarm);
+        alarmSoundRef.current.play();
+    }
+
+    const handleStopPlayingAlarm = () => {
+        alarmSoundRef.current.pause();
+    }
+
     return (
         <div className='setting-container'
             style={{ position: 'fixed', top: posX, left: posY }}>
@@ -65,7 +99,6 @@ const Setting = ({ posX, posY }) => {
                                                 onClick={() => {
                                                     setTheme(element.id);
                                                     updateSettings('Theme', element.link);
-                                                    console.log(currentSetting.theme);
                                                 }}>
                                                 <img src={element.link}></img>
                                             </div>
@@ -75,6 +108,30 @@ const Setting = ({ posX, posY }) => {
                                 <Button size="small" color="var(--neon-blue)" textColor="#FFF">Apply</Button>
                             </div>
 
+                        )
+                    }
+                    {
+                        settingMode === 'Sound' && (
+                            <div className='setting-content'>
+                                <h3>Select alarm sound</h3>
+                                <div className='sound-list'>
+                                    {
+                                        alarms.map((element, index) => (
+                                            <div className='sound-list-selection' key={element.id}>
+                                                <div className={alarm === index ? 'radio-active' : 'radio'}
+                                                    onClick={() => {setAlarm(element.id);
+                                                        playSelectedAlarm(); }}
+                                                >
+
+                                                </div>
+                                                <p>{element.name}</p>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                                <audio ref={alarmSoundRef} src={require(`../../assets/sounds/${alarms[alarm].path}`)} ></audio>
+                                <Button size="small" color="var(--neon-blue)" textColor="#FFF">Apply</Button>
+                            </div>
                         )
                     }
                 </div>

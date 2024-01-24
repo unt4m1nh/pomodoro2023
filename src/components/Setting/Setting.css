@@ -82,3 +82,28 @@
     height: 100px;
     border-radius: 10px;
 }
+
+.sound-list-selection {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+}
+
+.radio {
+  width: 17px;
+  height: 17px;
+  border: 1px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+
+.radio-active {
+  width: 10px;
+  height: 10px;
+  border: 5px solid var(--neon-blue);
+  border-radius: 50%;
+  background-color: #fff;
+}
