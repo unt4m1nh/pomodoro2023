@@ -25,7 +25,7 @@
 
 .setting-mode {
     display: flex;
-    flex:  1;
+    flex: 1;
     flex-direction: column;
     border-right: 1px solid var(--dawn-blue);
     gap: 5px;
@@ -84,26 +84,40 @@
 }
 
 .sound-list-selection {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  font-size: 18px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
 }
 
 .radio {
-  width: 17px;
-  height: 17px;
-  border: 1px solid black;
-  border-radius: 50%;
-  cursor: pointer;
+    width: 17px;
+    height: 17px;
+    border: 1px solid black;
+    border-radius: 50%;
+    cursor: pointer;
 }
 
 
 .radio-active {
-  width: 10px;
-  height: 10px;
-  border: 5px solid var(--neon-blue);
-  border-radius: 50%;
-  background-color: #fff;
+    width: 10px;
+    height: 10px;
+    border: 5px solid var(--neon-blue);
+    border-radius: 50%;
+    background-color: #fff;
+}
+
+.slider {
+    width: 100%;
+    height: 25px;
+    background-color: var(--dawn-blue);
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
 }

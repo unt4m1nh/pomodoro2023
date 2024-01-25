@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import "./Setting.css"
 
 //Global import Font Awesoem Icons 5
@@ -18,6 +18,7 @@ const Setting = ({ posX, posY }) => {
     const [settingMode, setSettingMode] = useState('Theme');
     const [theme, setTheme] = useState(0);
     const [alarm, setAlarm] = useState(0);
+    const [volume, setVolume] = useState(50);
     const [checked, setChecked] = useState(false);
 
     const alarmSoundRef = useRef(null);
@@ -65,8 +66,20 @@ const Setting = ({ posX, posY }) => {
         alarmSoundRef.current.play();
     }
 
+    useEffect(() => {
+        if (alarmSoundRef.current !== null) {
+            alarmSoundRef.current.volume = volume / 100;
+            console.log(alarm);
+            playSelectedAlarm();
+        }
+    }, [alarm, volume]);
+
     const handleStopPlayingAlarm = () => {
         alarmSoundRef.current.pause();
+    }
+
+    const handleChangeVolume = (e) => {
+        setVolume(e.target.value);
     }
 
     return (
@@ -119,8 +132,9 @@ const Setting = ({ posX, posY }) => {
                                         alarms.map((element, index) => (
                                             <div className='sound-list-selection' key={element.id}>
                                                 <div className={alarm === index ? 'radio-active' : 'radio'}
-                                                    onClick={() => {setAlarm(element.id);
-                                                        playSelectedAlarm(); }}
+                                                    onClick={() => {
+                                                        setAlarm(element.id);
+                                                    }}
                                                 >
 
                                                 </div>
@@ -129,7 +143,14 @@ const Setting = ({ posX, posY }) => {
                                         ))
                                     }
                                 </div>
-                                <audio ref={alarmSoundRef} src={require(`../../assets/sounds/${alarms[alarm].path}`)} ></audio>
+                                <h3>Volume</h3>
+                                <div className='volume-container'>
+                                    <input type="range" min="1" max="100" value={volume} className="slider" id="myRange"
+                                        onChange={handleChangeVolume} />
+                                </div>
+                                <audio ref={alarmSoundRef}
+                                    src={require(`../../assets/sounds/${alarms[alarm].path}`)}
+                                    volume={volume/100} ></audio>
                                 <Button size="small" color="var(--neon-blue)" textColor="#FFF">Apply</Button>
                             </div>
                         )
