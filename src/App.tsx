@@ -1,11 +1,12 @@
 import './App.css';
 import Home from './pages/Home/Home';
-import { GeneralSettings } from './GeneralSettings';
+import { GeneralSettings } from './context/GeneralSettings.tsx';
+import React from 'react';
 
 function App() {
   return (
     <GeneralSettings>
-      <div className="App">
+      <div className='App'>
         <Home />
       </div>
     </GeneralSettings>
